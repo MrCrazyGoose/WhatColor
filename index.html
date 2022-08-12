@@ -25,18 +25,21 @@
         let incorrectQs = 0;
         let correctQs = 0;
 
+        // setting the gamemode as easy
         function easySet() {
             gameMode = 'Easy';
             document.querySelector('#currentSettings').innerText = gameMode;
             console.log(gameMode);
         }
         
+        // setting the gamemode as hard
         function hardSet() {
             gameMode = 'Hard';
             document.querySelector('#currentSettings').innerText = gameMode;
             console.log(gameMode);
         }
 
+        // shuffles the array of colors before each game
         function shuffle(array) {
             let n = array.length;
             while (n>0) {
@@ -49,28 +52,34 @@
         }
 
         function changeBackground() {
+            //list of easy colors
             const EASY_COLORS_ARRAY = ['BLUE', 'CYAN','GOLD','GRAY','GREEN','MAGENTA','ORANGE','RED','WHITE','YELLOW'];
+            //list of hard colors
             const HARD_COLORS_ARRAY = ["ALICEBLUE", "ANTIQUEWHITE", "AQUA", "AQUAMARINE", "AZURE", "BEIGE", "BISQUE", "BLACK", "BLANCHEDALMOND", "BLUE", "BLUEVIOLET", "BROWN", "BURLYWOOD", "CADETBLUE", "CHARTREUSE", "CHOCOLATE", "CORAL", "CORNFLOWERBLUE", "CORNSILK", "CRIMSON", "CYAN", "DARKBLUE", "DARKCYAN", "DARKGOLDENROD", "DARKGRAY", "DARKGREY", "DARKGREEN", "DARKKHAKI", "DARKMAGENTA", "DARKOLIVEGREEN", "DARKORANGE", "DARKORCHID", "DARKRED", "DARKSALMON", "DARKSEAGREEN", "DARKSLATEBLUE",
             "DARKSLATEGRAY", "DARKSLATEGREY", "DARKTURQUOISE", "DARKVIOLET", "DEEPPINK", "DEEPSKYBLUE", "DIMGRAY", "DIMGREY", "DODGERBLUE", "FIREBRICK", "FLORALWHITE", "FORESTGREEN", "FUCHSIA", "GAINSBORO", "GHOSTWHITE", "GOLD", "GOLDENROD", "GRAY", "GREY", "GREEN", "GREENYELLOW", "HONEYDEW", "HOTPINK", "INDIANRED", "INDIGO", "IVORY", "KHAKI", "LAVENDER", "LAVENDERBLUSH", "LAWNGREEN", "LEMONCHIFFON", "LIGHTBLUE", "LIGHTCORAL", "LIGHTCYAN", "LIGHTGOLDENRODYELLOW", "LIGHTGRAY", "LIGHTGREY", "LIGHTGREEN",
             "LIGHTPINK", "LIGHTSALMON", "LIGHTSEAGREEN", "LIGHTSKYBLUE", "LIGHTSLATEGRAY", "LIGHTSLATEGREY", "LIGHTSTEELBLUE", "LIGHTYELLOW", "LIME", "LIMEGREEN", "LINEN", "MAGENTA", "MAROON", "MEDIUMAQUAMARINE", "MEDIUMBLUE", "MEDIUMORCHID", "MEDIUMPURPLE", "MEDIUMSEAGREEN", "MEDIUMSLATEBLUE", "MEDIUMSPRINGGREEN", "MEDIUMTURQUOISE", "MEDIUMVIOLETRED", "MIDNIGHTBLUE", "MINTCREAM", "MISTYROSE", "MOCCASIN", "NAVAJOWHITE", "NAVY", "OLDLACE", "OLIVE", "OLIVEDRAB", "ORANGE", "ORANGERED", "ORCHID", "PALEGOLDENROD", 
             "PALEGREEN", "PALETURQUOISE", "PALEVIOLETRED", "PAPAYAWHIP", "PEACHPUFF", "PERU", "PINK", "PLUM", "POWDERBLUE", "PURPLE", "REBECCAPURPLE", "RED", "ROSYBROWN", "ROYALBLUE", "SADDLEBROWN", "SALMON", "SANDYBROWN", "SEAGREEN", "SEASHELL", "SIENNA", "SILVER", "SKYBLUE", "SLATEBLUE", "SLATEGRAY", "SLATEGREY", "SNOW", "SPRINGGREEN", "STEELBLUE", "TAN", "TEAL", "THISTLE", "TOMATO", "TURQUOISE", "VIOLET", "WHEAT", "WHITE", "WHITESMOKE", "YELLOW", "YELLOWGREEN"];
+            //shuffles the chosen array
             shuffle(gameMode.toUpperCase+"_COLORS_ARRAY");
+            //picks a random color
             if(gameMode === 'Easy') {
                 bgColor = EASY_COLORS_ARRAY[Math.floor(Math.random() * EASY_COLORS_ARRAY.length)];
             }
             else if(gameMode === 'Hard') {
                 bgColor = HARD_COLORS_ARRAY[Math.floor(Math.random() * HARD_COLORS_ARRAY.length)];
             }
+            //changes the background to the chosen color
             const body = document.querySelector("body");
             body.style.backgroundColor = bgColor;
         }
         
         function timer(sec) {
+            //updates the time remaining
             let span = document.querySelector('#timeRemaining');
-
             let timer = setInterval(function() {
                 span.innerHTML = '00:' + ("" + sec).padStart(2, '0');
-
+            
+            //ends the game when timer runs out
                 if (sec <= 0) {
                     clearInterval(timer);
                     bgColor = null;
@@ -81,10 +90,12 @@
             }, 1000);
         }
 
+        //event listener and query selectior stuff
         document.addEventListener("DOMContentLoaded", function() {
             document.querySelector('#massage').style.display = 'none';
             document.querySelector('#currentSettings').innerText = gameMode
 
+            //user can submit their answer
             document.querySelector("form").addEventListener("submit", function(event) {
                 event.preventDefault();  // stop form submit from refreashing page
                 if (bgColor !== null) {
@@ -93,13 +104,16 @@
                     let divC = document.querySelector("#correctCounter");
                     let divI = document.querySelector("#incorrectCounter");
 
+                    //makes stuff capitalized so that it can compare it well to the list
                     let answer = input.value.toUpperCase().trim().replace(/\s+/g, "");
                     input.value = "";
+                    //if they are wrong
                     if(answer !== bgColor) {
                         incorrectQs = incorrectQs + 1;
                         divI.innerText = incorrectQs
                         divM.innerText = answer + " is incorrect! The correct answer is " + bgColor;
                     }
+                    //if they are right
                     else if(answer === bgColor) {
                         correctQs = correctQs + 1;
                         divC.innerText = correctQs
@@ -109,9 +123,11 @@
                 }
             });
 
+            //easy and hard mode selecting buttons
             document.querySelector('#selectEasy').style.display = 'inline';
             document.querySelector('#selectHard').style.display = 'inline';
 
+            //when they start the game with space
             document.addEventListener("keydown", function(event) {
                 // start game
                 const SPACE = 32;
@@ -136,17 +152,27 @@
 </head>
 
 <body>
+    <!--title and subtitle-->
     <h1> Welcome to What Color? </h1>
     <h2> Guess the color of the background as fast as you can? </h2>
+
+    <!--timer-->
     <h2> Timer: <span id="timeRemaining">00:30</span> seconds </h2>
+    
+    <!--text enter box-->
     <form> What color is this: <input type="text"> </form>
     <div id="message"></div>
+
     <h1>Press Space to Start!</h1>
+
+    <!--gamemode stuff!-->
     <button id="selectEasy" onClick="easySet()">Easy</button>
     <button id="selectHard" onClick="hardSet()">Hard</button>
     <h2>Current Game Mode: <span id="currentSettings"></span></h2>
     <button id="massage" onClick="window.location.reload();">Home Screen</button>
     <h3>(easy mode is selected by default)</h3>
+
+    <!--correct and incorrect question counters-->
     <h2>Correct: <span id="correctCounter"></span></h2>
     <h2>Incorrect:<span id="incorrectCounter"></span></h2>
 </body>
